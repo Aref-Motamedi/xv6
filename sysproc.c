@@ -96,3 +96,14 @@ sys_getppid(void)
 {
   return getppid();
 }
+// get children's id
+int
+sys_getChildren(void)
+{
+  int procid;
+  argint(0,&procid);
+  
+  return getChildren(procid);
+}
+
+

@@ -538,3 +538,59 @@ getppid(void)
 {
   return myproc()->parent->pid;
 }
+
+int
+getChildren(int procid)
+{
+  struct proc *p;
+  int res = 0;
+//  cprintf("procid: %d\n",procid);
+
+  acquire(&ptable.lock);
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+//	cprintf("%d\n",p->pid);
+  	if(p->parent->pid == procid)
+	{
+//		cprintf("1\n");
+		int childID = p->pid;
+		if(res == 0)
+		{
+//			cprintf("res =0\n");
+
+			res = childID;
+		}
+		else
+		{
+//			cprintf("else\n");
+
+			int tmp = 0;
+			int size = 0;
+			while(1)
+			{
+				tmp = childID / 10;
+				size++;
+				if(tmp < 1){
+					break;
+				}
+			}
+			int i;
+			for(i = 0 ; i < size ; i++)
+			{
+				res *= 10;
+			}
+//			cprintf("before res %d\n",res);
+
+			res += childID;
+//			cprintf("after res %d\n",res);
+
+		}
+	}
+  }
+  release(&ptable.lock);
+ // cprintf("final res %d\n",res);
+
+  return res;
+}
+
+
+
