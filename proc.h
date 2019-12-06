@@ -51,7 +51,8 @@ struct proc {
   char name[16];               // Process name (debugging)
   int sysCallCount[30];	       // Counter of called systemcalls
   int priority;                // Priority of the process
-  long calculatedPriority;      // Calculated priority
+  long calculatedPriority;     // Calculated priority
+  struct timeVariables *tv;    // Time Variables of process
 };
 
 // Process memory is laid out contiguously, low addresses first:
@@ -59,3 +60,12 @@ struct proc {
 //   original data and bss
 //   fixed-size stack
 //   expandable heap
+
+struct timeVariables
+{
+  int creationTime;           // Time process created
+  int terminationTime;        // Time process terminated
+  int sleepingTime;           // Amount of time process is sleeped
+  int readyTime;              // Amount of time process is ready
+  int runningTime;            // Amount of time process is running
+};

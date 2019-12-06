@@ -353,15 +353,14 @@ scheduler(void)
   struct proc *p;
   struct cpu *c = mycpu();
   c->proc = 0;
+  for(;;){
+   if (policy==2){
   
-  if (policy==2){
-    for(;;){
       // Enable interrupts on this processor.
       sti();
 
       // Loop over process table looking for process to run.
       long bestpriority=-1;
-      struct proc *pp;
       
       acquire(&ptable.lock);
       for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
@@ -398,11 +397,10 @@ scheduler(void)
       }
       release(&ptable.lock);
       
-    }
-  } else if (policy==1)
-  {
+    }else if (policy==1)
+    {
     
-    for(;;){
+    
       // Enable interrupts on this processor.
       sti();
 
@@ -411,6 +409,9 @@ scheduler(void)
       for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
         if(p->state != RUNNABLE)
           continue;
+        if (policy!=1){
+          continue;
+        }
 
         // Switch to chosen process.  It is the process's job
         // to release ptable.lock and then reacquire it
@@ -429,7 +430,8 @@ scheduler(void)
       release(&ptable.lock);
 
     }
-  }
+  
+  } 
   
 
 }
