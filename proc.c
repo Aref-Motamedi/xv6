@@ -677,10 +677,14 @@ getCount(int sysid)
 }
 
 int
-changePriority(int procid)
+changePriority(int num)
 {
-    //code
-    return 0;
+    if (num<=5 && num>0){
+      myproc()->priority = num;
+      return 1;
+
+    }
+    return -1;
 }
 
 
