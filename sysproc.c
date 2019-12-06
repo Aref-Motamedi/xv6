@@ -115,4 +115,12 @@ sys_getCount(void)
   
   return getCount(sysid);
 }
-
+// change priority
+int
+sys_changePriority(void)
+{
+  int procid;
+  argint(0,&procid);
+  
+  return getCount(procid);
+}

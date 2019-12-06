@@ -609,4 +609,11 @@ getCount(int sysid)
   return myproc()->sysCallCount[sysid];
 }
 
+int
+changePriority(int procid)
+{
+    //code
+    return 0;
+}
+
 
