@@ -189,7 +189,6 @@ fork(void)
   struct proc *np;
   struct proc *curproc = myproc();
 
-  curproc->sysCallCount[1]++;
 
   // Allocate process.
   if((np = allocproc()) == 0){
@@ -570,11 +569,11 @@ getChildren(int procid)
 		{
 //			cprintf("else\n");
 
-			int tmp = 0;
+			int tmp = childID;
 			int size = 0;
 			while(1)
 			{
-				tmp = childID / 10;
+				tmp = tmp / 10;
 				size++;
 				if(tmp < 1){
 					break;
@@ -603,6 +602,10 @@ getChildren(int procid)
 int
 getCount(int sysid)
 {
+  if (sysid >30){
+    cprintf("invalid systemcall number");
+    return 0;
+  }
   return myproc()->sysCallCount[sysid];
 }
 
