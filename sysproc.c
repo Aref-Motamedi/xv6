@@ -124,3 +124,13 @@ sys_changePriority(void)
   
   return getCount(procid);
 }
+// change policy
+int
+sys_changePolicy(void)
+{
+  int num;
+  argint(0,&num);
+  
+  return getCount(num);
+}
+
