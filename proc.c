@@ -88,6 +88,11 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  
+  int cnt=0;
+  for ( cnt=1 ; cnt < 30 ; cnt++ ){
+    p->sysCallCount[cnt]=0;
+  }
 
   release(&ptable.lock);
 
@@ -183,6 +188,8 @@ fork(void)
   int i, pid;
   struct proc *np;
   struct proc *curproc = myproc();
+
+  curproc->sysCallCount[1]++;
 
   // Allocate process.
   if((np = allocproc()) == 0){
@@ -594,9 +601,9 @@ getChildren(int procid)
 }
 
 int
-getCount(int procid)
+getCount(int sysid)
 {
-  return ;
+  return myproc()->sysCallCount[sysid];
 }
 
 

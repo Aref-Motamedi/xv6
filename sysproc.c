@@ -107,11 +107,12 @@ sys_getChildren(void)
 }
 
 // get number of times the referenced system call was invoked by the calling process.
+int
 sys_getCount(void)
 {
-  int procid;
-  argint(0,&procid);
+  int sysid;
+  argint(0,&sysid);
   
-  return getCount(procid);
+  return getCount(sysid);
 }
 
