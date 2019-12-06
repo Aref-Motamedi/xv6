@@ -592,5 +592,10 @@ getChildren(int procid)
   return res;
 }
 
+int
+getCount(int procid)
+{
+  return ;
+}
 
 
