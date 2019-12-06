@@ -50,6 +50,8 @@ struct proc {
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
   int sysCallCount[30];	       // Counter of called systemcalls
+  int priority;                // Priority of the process
+  long calculatedPriority;      // Calculated priority
 };
 
 // Process memory is laid out contiguously, low addresses first:
