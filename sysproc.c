@@ -119,10 +119,9 @@ sys_getCount(void)
 int
 sys_changePriority(void)
 {
-  int procid;
-  argint(0,&procid);
-  
-  return getCount(procid);
+  int pro;
+  argint(0,&pro);
+  return changePriority(pro);
 }
 // change policy
 int
@@ -131,6 +130,6 @@ sys_changePolicy(void)
   int num;
   argint(0,&num);
   
-  return getCount(num);
+  return changePolicy(num);
 }
 

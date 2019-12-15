@@ -409,7 +409,7 @@ scheduler(void)
       for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
         if(p->state != RUNNABLE)
           continue;
-        if (policy!=1){
+        if (policy==2){
           continue;
         }
 
@@ -704,6 +704,11 @@ changePolicy(int num)
     return 1;
   }
   return 0;
+}
+
+int 
+getPolicy(void){
+  return policy;
 }
 
 

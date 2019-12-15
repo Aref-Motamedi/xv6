@@ -125,6 +125,7 @@ int             getChildren(int);
 int             getCount(int);
 int             changePriority(int);
 int             changePolicy(int);
+int             getPolicy(void);
 
 // swtch.S
 void            swtch(struct context**, struct context*);
