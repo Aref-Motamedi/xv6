@@ -3,14 +3,16 @@
 
 int main(void){
     changePolicy(0);
+    fork();
+    
+    
     int i=0;
     for (i=0;i<100;i++){
-        printf(1,"a");
+        printf(1,"a%d",getpid());
     }
-    printf(1,"\nchangepolicy1\n");
-    changePolicy(1);
+    changePriority(14);
     for (i=0;i<100;i++){
-        printf(1,"b");
+        printf(1,"b%d",getpid());
     }
 
     exit();

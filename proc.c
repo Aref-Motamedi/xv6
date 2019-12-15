@@ -7,7 +7,7 @@
 #include "proc.h"
 #include "spinlock.h"
 
-static int policy=1;
+static int policy=2;
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
@@ -95,14 +95,15 @@ found:
     p->sysCallCount[cnt]=0;
   }
   p->priority=5;
-
+  //p->calculatedPriority =-1;
   struct proc *pp;
   int check=-1;
   long bestp=-1;
 
   for(pp = ptable.proc; pp < &ptable.proc[NPROC]; pp++){
-    if(pp->state == RUNNABLE || pp->state==RUNNING){
+    if((pp->pid != p->pid)&&(pp->state == RUNNABLE || pp->state==RUNNING)){
       check=1;
+
       if (bestp==-1){
         bestp =pp->calculatedPriority;
       } else if (bestp > pp->calculatedPriority){
@@ -689,6 +690,7 @@ changePriority(int num)
 {
     if (num<=5 && num>0){
       myproc()->priority = num;
+      cprintf("\n%d priority changed %d \n",myproc()->pid,myproc()->priority);
       return 1;
 
     }

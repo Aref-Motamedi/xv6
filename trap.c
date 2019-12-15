@@ -108,6 +108,7 @@ trap(struct trapframe *tf)
       
       if (getPolicy()!=0){
         if(ticks%QUANTUM == 0){
+          
           yield();
         }
       } else{
