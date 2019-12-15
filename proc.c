@@ -397,7 +397,7 @@ scheduler(void)
       }
       release(&ptable.lock);
       
-    }else if (policy==1)
+    }else
     {
     
     
