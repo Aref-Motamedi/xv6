@@ -94,6 +94,19 @@ found:
   for ( cnt=1 ; cnt < 30 ; cnt++ ){
     p->sysCallCount[cnt]=0;
   }
+
+  // p->tv->creationTime=ticks;
+  // p->tv->readyTime=0;
+  // p->tv->runningTime=0;
+  // p->tv->terminationTime=0;
+  // p->tv->sleepingTime=0;
+
+  p->creationTime=ticks;
+  p->readyTime=0;
+  p->runningTime=0;
+  p->terminationTime=0;
+  p->sleepingTime=0;
+
   p->priority=5;
   //p->calculatedPriority =-1;
   struct proc *pp;
@@ -292,6 +305,8 @@ exit(void)
 
   // Jump into the scheduler, never to return.
   curproc->state = ZOMBIE;
+  curproc->terminationTime=ticks;
+  curproc->readyTime = (curproc->terminationTime)-(curproc->creationTime) - (curproc->sleepingTime);
   sched();
   panic("zombie exit");
 }
@@ -385,12 +400,17 @@ scheduler(void)
         // Switch to chosen process.  It is the process's job
         // to release ptable.lock and then reacquire it
         // before jumping back to us.
+        uint newt=ticks;
         c->proc = p;
         switchuvm(p);
         p->state = RUNNING;
 
         swtch(&(c->scheduler), p->context);
         switchkvm();
+        p->runningTime += ticks - newt;
+        // cprintf("%d\trdy\trun\tcre\tsle\tter\n",p->pid);
+        // cprintf("1\t%d\t%d\t%d\t%d\t%d\n",p->readyTime,p->runningTime,p->creationTime,p->sleepingTime,p->terminationTime);
+
 
         // Process is done running for now.
         // It should have changed its p->state before coming back.
@@ -520,6 +540,7 @@ sleep(void *chan, struct spinlock *lk)
   // Go to sleep.
   p->chan = chan;
   p->state = SLEEPING;
+  p->sleepingTime = ticks;
 
   sched();
 
@@ -543,7 +564,10 @@ wakeup1(void *chan)
 
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
     if(p->state == SLEEPING && p->chan == chan)
+      {
       p->state = RUNNABLE;
+      p->sleepingTime = ticks - (p->sleepingTime);
+      }
 }
 
 // Wake up all processes sleeping on chan.

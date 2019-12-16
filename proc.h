@@ -52,7 +52,13 @@ struct proc {
   int sysCallCount[30];	       // Counter of called systemcalls
   int priority;                // Priority of the process
   long calculatedPriority;     // Calculated priority
-  struct timeVariables *tv;    // Time Variables of process
+  long creationTime;           // Time process created
+  long terminationTime;        // Time process terminated
+  long sleepingTime;           // Amount of time process is sleeped
+  long readyTime;              // Amount of time process is ready
+  long runningTime;            // Amount of time process is running
+
+  
 };
 
 // Process memory is laid out contiguously, low addresses first:
