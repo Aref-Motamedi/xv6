@@ -7,6 +7,8 @@
 #include "mmu.h"
 #include "proc.h"
 
+
+
 int
 sys_fork(void)
 {
@@ -133,3 +135,10 @@ sys_changePolicy(void)
   return changePolicy(num);
 }
 
+int
+sys_waitForChild(void){
+  // struct timeVariables tv ={0,0,0,0,0};
+  struct timeVariables *tv1;
+  argptr(0,(void*)&tv1,sizeof(*tv1));
+  return waitForChild(tv1);
+}
