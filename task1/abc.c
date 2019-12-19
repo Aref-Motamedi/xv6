@@ -38,10 +38,55 @@ int main()
         
         char newstr[128] = "The sum of even digits in the input number: ";
 
-        // *** HOSEIN CODE HERE! ***
+        // *** concatenating ***
+        int numSize = 0;
+        int i = 0;
+        int tmp = number;
+        while(tmp > 0)
+        {
+            numSize++;
+            tmp /= 10; 
+        }
         
+        int newstrSize = strlen(newstr);
+        char numberString[numSize];
+        if(number == 0)
+        {
+        newstr[newstrSize] = 0 + '0'; 
+        }
+        tmp = number;
+        for(i = numSize-1  ; i >= 0 ; i--)
+        {
+            int numBit;
+            int temp = tmp / 10;
+            temp *= 10;
+            numBit = tmp - temp;
+            tmp /= 10;
+            
+            numberString[i] = numBit + '0'; 
+        }
+        int j = 0;
+       for(j = 0 ; j < numSize ; j++)
+       {
+            newstr[newstrSize] = numberString[j];
+           newstrSize++;
+       }
+        int k = 0;
+        newstrSize = strlen(newstr);
+        int strSize = strlen(str);
+        str[strSize] = ' ';
+        strSize++;
+
+        for(k = 0 ; k < newstrSize ; k++)
+        {
+            str[strSize] = newstr[k];
+            strSize++;
+            if(k == newstrSize - 1)
+            str[strSize] = '\0';
+
+        }        
         close(p2[0]); // close the read side of pipe 2
-        write(p2[1],newstr,128); // passing the result
+        write(p2[1],str,128); // passing the result
         close(p2[1]); // close the write side of pipe 2
         
         return 0;
