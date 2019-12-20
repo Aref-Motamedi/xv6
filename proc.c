@@ -7,7 +7,7 @@
 #include "proc.h"
 #include "spinlock.h"
 
-static int policy=2;
+static int policy=1;
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];

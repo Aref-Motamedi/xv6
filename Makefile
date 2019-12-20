@@ -184,6 +184,7 @@ UPROGS=\
 	_getChildrenTest\
 	_getCountTest\
 	_atest\
+	_OriginalSchedTest\
 	_zombie\
 
 fs.img: mkfs README $(UPROGS)
@@ -253,7 +254,7 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
 
 EXTRA=\
 	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
-	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c getppidtest.c getChildrenTest.c getCountTest.c atest.c zombie.c\
+	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c getppidtest.c getChildrenTest.c getCountTest.c atest.c OriginalSchedTest.c zombie.c\
 	printf.c umalloc.c\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
