@@ -52,23 +52,24 @@ trap(struct trapframe *tf)
       acquire(&tickslock);
       ticks++;
       //
-      if (myproc()){
-        if (myproc()->state == RUNNABLE){
-          myproc()->readyTime +=1;
-        } else if (myproc()->state == RUNNING){
-          myproc()->runningTime+=1;
-          myproc()->readyTime +=1;
-        } else if (myproc()->state == SLEEPING){
-          myproc()->sleepingTime +=1;
-        } else if (myproc()->state == ZOMBIE){
-          if (myproc()->terminationTime == 0){
-            myproc()->terminationTime = ticks;
-            cprintf("%d\trdy\trun\tcre\tsle\tter\n",myproc()->pid);
-            cprintf("1\t%d\t%d\t%d\t%d\t%d\n",myproc()->readyTime,myproc()->runningTime,myproc()->creationTime,myproc()->sleepingTime,myproc()->terminationTime);
-          }
-        }
+      updatetime();
+      // if (myproc()){
+      //   if (myproc()->state == RUNNABLE){
+      //     myproc()->readyTime +=1;
+      //   } else if (myproc()->state == RUNNING){
+      //     myproc()->runningTime+=1;
+      //     myproc()->readyTime +=1;
+      //   } else if (myproc()->state == SLEEPING){
+      //     myproc()->sleepingTime +=1;
+      //   } else if (myproc()->state == ZOMBIE){
+      //     if (myproc()->terminationTime == 0){
+      //       myproc()->terminationTime = ticks;
+      //       cprintf("%d\trdy\trun\tcre\tsle\tter\n",myproc()->pid);
+      //       cprintf("1\t%d\t%d\t%d\t%d\t%d\n",myproc()->readyTime,myproc()->runningTime,myproc()->creationTime,myproc()->sleepingTime,myproc()->terminationTime);
+      //     }
+      //   }
           
-      }
+      // }
       // cprintf("aaa%d",myproc()->pid);
       // if (myproc()->state == RUNNABLE){
       //   myproc()->readyTime +=1;
@@ -126,6 +127,7 @@ trap(struct trapframe *tf)
             myproc()->pid, myproc()->name, tf->trapno,
             tf->err, cpuid(), tf->eip, rcr2());
     myproc()->killed = 1;
+    // myproc()->terminationTime = ticks;
   }
 
   // Force process exit if it has been killed and is in user space.

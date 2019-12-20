@@ -22,6 +22,34 @@ extern void trapret(void);
 static void wakeup1(void *chan);
 
 void
+updatetime(void){
+
+  struct proc *p;
+  acquire(&ptable.lock);
+
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->state == RUNNABLE){
+      p->readyTime +=1;
+    } else if(p->state == RUNNING){
+      p->readyTime +=1;
+      p->runningTime +=1;
+      
+    } else if(p->state == SLEEPING){
+      p->sleepingTime +=1;
+    } else if(p->state == ZOMBIE){
+      if(p->terminationTime ==0){
+        p->terminationTime = ticks;
+        
+        // cprintf("terminated %d\t%d\t%d\t%d\n",p->pid,p->terminationTime - p->creationTime,p->runningTime, p->terminationTime - p->creationTime - p->runningTime );
+
+      }
+    }
+  }
+  release(&ptable.lock);
+  
+}
+
+void
 pinit(void)
 {
   initlock(&ptable.lock, "ptable");
@@ -305,8 +333,9 @@ exit(void)
 
   // Jump into the scheduler, never to return.
   curproc->state = ZOMBIE;
-  curproc->terminationTime=ticks;
-  curproc->readyTime = (curproc->terminationTime)-(curproc->creationTime) - (curproc->sleepingTime);
+  curproc->terminationTime = ticks;
+  // curproc->terminationTime=ticks;
+  // curproc->readyTime = (curproc->terminationTime)-(curproc->creationTime) - (curproc->sleepingTime);
   sched();
   panic("zombie exit");
 }
@@ -400,14 +429,14 @@ scheduler(void)
         // Switch to chosen process.  It is the process's job
         // to release ptable.lock and then reacquire it
         // before jumping back to us.
-        uint newt=ticks;
+        // uint newt=ticks;
         c->proc = p;
         switchuvm(p);
         p->state = RUNNING;
 
         swtch(&(c->scheduler), p->context);
         switchkvm();
-        p->runningTime += ticks - newt;
+        // p->runningTime += ticks - newt;
         // cprintf("%d\trdy\trun\tcre\tsle\tter\n",p->pid);
         // cprintf("1\t%d\t%d\t%d\t%d\t%d\n",p->readyTime,p->runningTime,p->creationTime,p->sleepingTime,p->terminationTime);
 
@@ -437,12 +466,15 @@ scheduler(void)
         // Switch to chosen process.  It is the process's job
         // to release ptable.lock and then reacquire it
         // before jumping back to us.
+        // int newt = ticks;
         c->proc = p;
         switchuvm(p);
         p->state = RUNNING;
 
         swtch(&(c->scheduler), p->context);
         switchkvm();
+
+        // p->runningTime += ticks - newt;
 
         // Process is done running for now.
         // It should have changed its p->state before coming back.
@@ -540,7 +572,7 @@ sleep(void *chan, struct spinlock *lk)
   // Go to sleep.
   p->chan = chan;
   p->state = SLEEPING;
-  p->sleepingTime = ticks;
+  // p->sleepingTime = ticks;
 
   sched();
 
@@ -566,7 +598,7 @@ wakeup1(void *chan)
     if(p->state == SLEEPING && p->chan == chan)
       {
       p->state = RUNNABLE;
-      p->sleepingTime = ticks - (p->sleepingTime);
+      // p->sleepingTime = ticks - (p->sleepingTime);
       }
 }
 
@@ -738,7 +770,7 @@ getPolicy(void){
 }
 
 int 
-waitForChild(struct timeVariables* timevar){
+waitForChild(struct timeVariables *timevar){
   struct proc *p;
   int havekids, pid;
   struct proc *curproc = myproc();
@@ -763,6 +795,8 @@ waitForChild(struct timeVariables* timevar){
         timevar->runningTime = p->runningTime;
         timevar->sleepingTime = p->sleepingTime;
         timevar->terminationTime =p->terminationTime;
+        // cprintf("kosss%d\t%d\t%d\n",timevar->terminationTime - timevar->creationTime,timevar->runningTime, timevar->terminationTime - timevar->creationTime - timevar->runningTime );
+
 
         p->pid = 0;
         p->parent = 0;
@@ -776,6 +810,7 @@ waitForChild(struct timeVariables* timevar){
 
     // No point waiting if we don't have any children.
     if(!havekids || curproc->killed){
+      
       release(&ptable.lock);
       return -1;
     }
