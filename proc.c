@@ -746,7 +746,7 @@ changePriority(int num)
 {
     if (num<=5 && num>0){
       myproc()->priority = num;
-      cprintf("\n%d priority changed %d \n",myproc()->pid,myproc()->priority);
+      // cprintf("\n%d priority changed %d \n",myproc()->pid,myproc()->priority);
       return 1;
 
     }
@@ -809,10 +809,15 @@ waitForChild(struct timeVariables *timevar){
     }
 
     // No point waiting if we don't have any children.
-    if(!havekids || curproc->killed){
+    if(curproc->killed){
       
       release(&ptable.lock);
       return -1;
+    }
+    if(!havekids){
+      
+      release(&ptable.lock);
+      return myproc()-> pid;
     }
 
     // Wait for children to exit.  (See wakeup1 call in proc_exit.)

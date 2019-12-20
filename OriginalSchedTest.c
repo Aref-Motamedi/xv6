@@ -13,53 +13,45 @@ struct timeVariables
 
 
 int main(void){
-        printf(1,"Hiiiii");
+        changePolicy(1);
         int parent = getpid();
-        // int ttav=0, wtav=0;
-        // // int *tt = &ttav;
-        // // int *wt = &wtav;
+         int ttav=0, wtav=0, cbtav=0;
+
         printf(1,"parent id = %d \n",parent);
-        // int i;
-        // for(i = 10 ; i > 0 ; i--)
-        // {
-        //         if (getpid()==parent){
-        //                 fork();
-        //         }
-        // }
-fork();
-fork();
-fork();
-fork();
 
-
-        int j;
-        for(j = 0 ; j < 10 ; j++)
-        {
-                printf(1,"[%d] : [%d]\n",getpid(), j);
-        }
         struct timeVariables tv = {0,0,0,0,0};
         struct timeVariables *tv1 = &tv;
 
-        // if(getpid == parent)
-        // {
-        waitForChild(tv1);
-        sleep(100);
-        // printf(1,"[%d] finiiiiiiiiiiiiiiiiiiiiiiiiiiiiish\n",getpid());
-        printf(1,"PID\tTT\tCBT\tWT\n");
-        printf(1,"%d\t%d\t%d\t%d\n",getpid(),tv1->terminationTime - tv1->creationTime,tv1->runningTime, tv1->terminationTime - tv1->creationTime - tv1->runningTime );
-        // ttav += tv1->terminationTime - tv1->creationTime;
-        // wtav += tv1->terminationTime - tv1->creationTime - tv1->runningTime;
-        if (getpid() == parent){
-                // sleep(100);
-                // printf(1,"average %d\t%d\n", ttav / 8 , wtav / 8);  
+        int k;
+        for(k = 10 ; k > 0 ; k--)
+        {
+                if (getpid() == parent){
+                      fork();
+                }
+      
         }
-        // else
-        // {
-        //         wait();
-        // }
+        int j;
+        for(j = 0 ; j < 1000 ; j++)
+        {
+                printf(1,"[%d] : [%d]\n",getpid(), j);
+        }
         
+        
+ 
+        if (getpid() == parent){
+                   sleep(4000);
+                
+                for (j=0;j<10;j++){
+                        waitForChild(tv1);
+                        printf(1,"-------------------------------------------------\n");
+                        printf(1,"TurnAround Time\tCBT\tWaiting Time\n");
+                        printf(1,"%d\t\t%d\t%d\n",tv1->terminationTime - tv1->creationTime,tv1->runningTime, tv1->terminationTime - tv1->creationTime - tv1->runningTime );
+                        ttav += tv1->terminationTime - tv1->creationTime;
+                        cbtav+= tv1->runningTime;
+                        wtav += tv1->terminationTime - tv1->creationTime - tv1->runningTime;
+                }
+                //sleep(100);
+                printf(1,"Average TurnAround Time: %d\t\tCBT: %d\t\tWaitingtime: %d\n", ttav / 10 ,cbtav /10, wtav / 10);  
+        }
         exit();
-
-
-
 }
